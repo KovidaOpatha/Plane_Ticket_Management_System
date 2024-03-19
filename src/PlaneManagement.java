@@ -99,10 +99,6 @@ public class PlaneManagement {
                 Person person = new Person(name, surname, email);
                 Ticket ticket = new Ticket(rowNumber, seatNumber, calculatePrice(rowNumber, seatNumber), person);
                 soldTickets.add(ticket);
-                System.out.println("Tickets sold:");
-                for (Ticket t : soldTickets) {
-                    System.out.println("Row: " + t.getRow() + ", Seat: " + t.getSeat() + ", Price: " + t.getPrice() + ", Name: " + t.getPerson().getName() + ", Surname: " + t.getPerson().getSurname() + ", Email: " + t.getPerson().getEmail());
-                }
             }
         }else {
             System.out.println("Invalid row or seat number.");
