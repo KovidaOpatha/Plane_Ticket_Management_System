@@ -99,12 +99,14 @@ public class PlaneManagement {
                 Person person = new Person(name, surname, email);
                 Ticket ticket = new Ticket(rowNumber, seatNumber, calculatePrice(rowNumber, seatNumber), person);
                 soldTickets.add(ticket);
+                System.out.println("Tickets sold:");
+                for (Ticket t : soldTickets) {
+                    System.out.println("Row: " + t.getRow() + ", Seat: " + t.getSeat() + ", Price: " + t.getPrice() + ", Name: " + t.getPerson().getName() + ", Surname: " + t.getPerson().getSurname() + ", Email: " + t.getPerson().getEmail());
+                }
             }
         }else {
             System.out.println("Invalid row or seat number.");
         }
-
-
     }
 
     private double calculatePrice(String rowNumber, int seatNumber) {
@@ -182,16 +184,13 @@ public class PlaneManagement {
             System.out.println("Surname: " + ticket.getPerson().getSurname());
             System.out.println("Email: " + ticket.getPerson().getEmail());
         } else {
-            System.out.println("This seat is available.");
+            System.out.println("Ticket not found.");
         }
     }
 
     private Ticket findTicket(String row, int seat) {
-        int rowIndex = Character.toUpperCase(row.charAt(0)) - 'A';
-        int seatIndex = seat - 1;
-
         for (Ticket ticket : soldTickets) {
-            if (ticket.getRow().equals(String.valueOf(rowIndex)) && ticket.getSeat() == seatIndex) {
+            if (ticket.getRow().equalsIgnoreCase(row) && ticket.getSeat() == seat) {
                 return ticket;
             }
         }
