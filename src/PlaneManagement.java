@@ -147,13 +147,12 @@ public class PlaneManagement {
 
     private static void find_first_available(Scanner scanner) {
         boolean found = false;
-
+        char[] rows = {'A', 'B', 'C', 'D'};
 
         for (int i = 0; i < seats.length; i++) {
             for (int j = 0; j < seats[i].length; j++) {
                 if (seats[i][j].equals("0")) {
-                    int row = (i);
-                    System.out.println("The first available seat is: Row " + row + ", Seat " + (j + 1));
+                    System.out.println("The first available seat is: Row " + rows[i] + ", Seat " + (j + 1));
                     found = true;
                     break;
                 }
