@@ -122,7 +122,7 @@ public class PlaneManagement {
 
     private void cancel_seat(Scanner scanner) {
         System.out.println("Enter row Letter: ");
-        String row = scanner.next();
+        String row = scanner.next().toUpperCase(); // Convert input to uppercase
         System.out.println("Enter Seat Number: ");
         int seat = scanner.nextInt();
 
