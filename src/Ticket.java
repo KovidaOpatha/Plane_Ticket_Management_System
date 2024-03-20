@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public class Ticket {
     private String row;
     private int seat;
@@ -9,6 +14,35 @@ public class Ticket {
         this.seat = seat;
         this.price = price;
         this.person = person;
+        save(); // Call save method when a ticket is created
+    }
+
+    public void save() {
+        String fileName = row + seat + ".txt";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            writer.println("Row: " + row);
+            writer.println("Seat: " + seat);
+            writer.println("Price: " + price);
+            writer.println("Person Information:");
+            writer.println("Name: " + person.getName());
+            writer.println("Surname: " + person.getSurname());
+            writer.println("Email: " + person.getEmail());
+            System.out.println("Ticket information saved to " + fileName);
+        } catch (IOException e) {
+            System.out.println("Failed to save ticket information.");
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteFile() {
+        String fileName = row + seat + ".txt";
+        File file = new File(fileName);
+        if (file.exists()) {
+            file.delete();
+            System.out.println("Ticket information deleted from " + fileName);
+        } else {
+            System.out.println("Ticket file not found.");
+        }
     }
 
     public String getRow() {

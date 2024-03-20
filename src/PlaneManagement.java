@@ -141,6 +141,7 @@ public class PlaneManagement {
                 System.arraycopy(soldTickets, 0, newSoldTickets, 0, soldTickets.length);
                 newSoldTickets[soldTickets.length] = ticket;
                 soldTickets = newSoldTickets;
+                ticket.save();
 
                 // Exit the loop if the seat is successfully booked
                 break;
@@ -193,8 +194,9 @@ public class PlaneManagement {
                     }
                 }
 
-                // If ticket found, remove it from the soldTickets array
+                // If ticket found, remove it from the soldTickets array and delete the file
                 if (cancelledTicket != null) {
+                    cancelledTicket.deleteFile(); // Delete the associated file
                     Ticket[] newSoldTickets = new Ticket[soldTickets.length - 1];
                     int index = 0;
                     for (int i = 0; i < soldTickets.length; i++) {
@@ -211,6 +213,7 @@ public class PlaneManagement {
             break; // Exit the loop if the seat is successfully canceled
         }
     }
+
 
     private static void find_first_available(Scanner scanner) {
         boolean found = false;
