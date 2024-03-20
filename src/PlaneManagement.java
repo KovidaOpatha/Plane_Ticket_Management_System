@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class PlaneManagement {
@@ -95,12 +96,24 @@ public class PlaneManagement {
     }
 
     private void buy_seat(Scanner scanner) {
-        System.out.println("Enter ROW Letter (A,B,C,D): ");
-        String rowNumber = scanner.next();
-        System.out.println("Enter SEAT Number: ");
-        int seatNumber = scanner.nextInt();
+        while (true) {
+            System.out.println("Enter ROW Letter (A,B,C,D): ");
+            String rowNumber = scanner.next().toUpperCase(); // Convert input to uppercase for consistency
 
-        if ((rowNumber.equalsIgnoreCase("A") || rowNumber.equalsIgnoreCase("D") && seatNumber <= 14) || (rowNumber.equalsIgnoreCase("B") || rowNumber.equalsIgnoreCase("C") && seatNumber <= 12)) {
+            if (!isValidRow(rowNumber)) {
+                System.out.println("Invalid row number. Please enter A, B, C, or D.");
+                continue; // Repeat the loop to ask for row number again
+            }
+
+            System.out.println("Enter SEAT Number: ");
+            int seatNumber = scanner.nextInt();
+
+            if (!isValidSeat(rowNumber, seatNumber)) {
+                System.out.println("Invalid seat number for row " + rowNumber +
+                        ". Please select a seat number between 1 and " + (rowNumber.equalsIgnoreCase("A") || rowNumber.equalsIgnoreCase("D") ? 14 : 12));
+                continue; // Repeat the loop to ask for seat number again
+            }
+
             int rowIndex = Character.toUpperCase(rowNumber.charAt(0)) - 'A';
             int seatIndex = seatNumber - 1;
 
@@ -128,8 +141,20 @@ public class PlaneManagement {
                 System.arraycopy(soldTickets, 0, newSoldTickets, 0, soldTickets.length);
                 newSoldTickets[soldTickets.length] = ticket;
                 soldTickets = newSoldTickets;
+
+                // Exit the loop if the seat is successfully booked
+                break;
             }
         }
+    }
+
+    private boolean isValidRow(String rowNumber) {
+        return rowNumber.equalsIgnoreCase("A") || rowNumber.equalsIgnoreCase("B") || rowNumber.equalsIgnoreCase("C") || rowNumber.equalsIgnoreCase("D");
+    }
+
+    private boolean isValidSeat(String rowNumber, int seatNumber) {
+        return (rowNumber.equalsIgnoreCase("A") || rowNumber.equalsIgnoreCase("D")) && seatNumber >= 1 && seatNumber <= 14 ||
+                (rowNumber.equalsIgnoreCase("B") || rowNumber.equalsIgnoreCase("C")) && seatNumber >= 1 && seatNumber <= 12;
     }
 
 
