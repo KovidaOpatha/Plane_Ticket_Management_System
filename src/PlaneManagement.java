@@ -4,11 +4,11 @@ public class PlaneManagement {
 
     Scanner scanner = new Scanner(System.in);
     int choice;
-    private static String[][] seats = {
-            {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"},
-            {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"},
-            {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"},
-            {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"},
+    private static int[][] seats = {
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
     private Ticket[] soldTickets = new Ticket[0];
 
@@ -109,10 +109,10 @@ public class PlaneManagement {
             int rowIndex = Character.toUpperCase(rowNumber.charAt(0)) - 'A';
             int seatIndex = seatNumber - 1;
 
-            if (seats[rowIndex][seatIndex].equals("X")) {
+            if (seats[rowIndex][seatIndex] != 0) {
                 System.out.println("Seat already taken. Please select another seat.");
             } else {
-                seats[rowIndex][seatIndex] = "X";
+                seats[rowIndex][seatIndex] = 1;
                 System.out.println("Enter your First Name:");
                 String name = scanner.next();
                 System.out.println("Enter your Last Name:");
@@ -153,8 +153,8 @@ public class PlaneManagement {
         int seatIndex = seat - 1;  // Convert seat number to index
 
         if (rowIndex >= 0 && rowIndex < seats.length && seatIndex >= 0 && seatIndex < seats[rowIndex].length) {
-            if (seats[rowIndex][seatIndex].equals("X")) {
-                seats[rowIndex][seatIndex] = "0";
+            if (seats[rowIndex][seatIndex] == 1) {
+                seats[rowIndex][seatIndex] = 0;
                 System.out.println("Seat " + row + seat + " has been canceled.");
 
                 // Find the ticket to cancel
@@ -191,7 +191,7 @@ public class PlaneManagement {
 
         for (int i = 0; i < seats.length; i++) {
             for (int j = 0; j < seats[i].length; j++) {
-                if (seats[i][j].equals("0")) {
+                if (seats[i][j] == 0) {
                     System.out.println("The first available seat is: Row " + rows[i] + ", Seat " + (j + 1));
                     found = true;
                     break;
@@ -207,11 +207,15 @@ public class PlaneManagement {
         }
     }
 
-    private static void display_seat(Scanner scanner){
+    private static void display_seat(Scanner scanner) {
         for (int i = 0; i < seats.length; i++) {
             System.out.println("");
             for (int j = 0; j < seats[i].length; j++) {
-                System.out.print(seats[i][j] + " ");
+                if(seats[i][j] == 1){
+                    System.out.print("X ");
+                }else {
+                    System.out.print("O ");
+                }
             }
         }
     }
@@ -260,7 +264,7 @@ public class PlaneManagement {
         return null;
     }
 
-    public static void main (String[] args){
+    public static void main(String[] args) {
         PlaneManagement planeManagement = new PlaneManagement();
         do {
             planeManagement.printMenu();
