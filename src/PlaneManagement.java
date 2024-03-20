@@ -159,15 +159,27 @@ public class PlaneManagement {
 
 
     private void cancel_seat(Scanner scanner) {
-        System.out.println("Enter row Letter: ");
-        String row = scanner.next().toUpperCase(); // Convert row input to uppercase
-        System.out.println("Enter Seat Number: ");
-        int seat = scanner.nextInt();
+        while (true) {
+            System.out.println("Enter row Letter: ");
+            String row = scanner.next().toUpperCase(); // Convert row input to uppercase
 
-        int rowIndex = row.charAt(0) - 'A';  // Convert row letter to index
-        int seatIndex = seat - 1;  // Convert seat number to index
+            if (!isValidRow(row)) {
+                System.out.println("Invalid row number. Please enter A, B, C, or D.");
+                continue; // Repeat the loop to ask for row number again
+            }
 
-        if (rowIndex >= 0 && rowIndex < seats.length && seatIndex >= 0 && seatIndex < seats[rowIndex].length) {
+            System.out.println("Enter Seat Number: ");
+            int seat = scanner.nextInt();
+
+            if (!isValidSeat(row, seat)) {
+                System.out.println("Invalid seat number for row " + row +
+                        ". Please select a seat number between 1 and " + (row.equalsIgnoreCase("A") || row.equalsIgnoreCase("D") ? 14 : 12));
+                continue; // Repeat the loop to ask for seat number again
+            }
+
+            int rowIndex = row.charAt(0) - 'A';  // Convert row letter to index
+            int seatIndex = seat - 1;  // Convert seat number to index
+
             if (seats[rowIndex][seatIndex] == 1) {
                 seats[rowIndex][seatIndex] = 0;
                 System.out.println("Seat " + row + seat + " has been canceled.");
@@ -195,8 +207,8 @@ public class PlaneManagement {
             } else {
                 System.out.println("Seat " + row + seat + " is already available.");
             }
-        } else {
-            System.out.println("Invalid row or seat number.");
+
+            break; // Exit the loop if the seat is successfully canceled
         }
     }
 
