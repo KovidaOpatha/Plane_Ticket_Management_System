@@ -11,7 +11,7 @@ public class PlaneManagement {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
-    private Ticket[] soldTickets = new Ticket[0];
+    private Ticket[][] soldTickets = new Ticket[4][14];
 
     public void printMenu() {
         System.out.println("");
@@ -106,7 +106,7 @@ public class PlaneManagement {
             }
 
             System.out.println("Enter SEAT Number: ");
-            int seatNumber = scanner.nextInt();
+            int seatNumber = GetSeat(rowNumber);
 
             if (!isValidSeat(rowNumber, seatNumber)) {
                 System.out.println("Invalid seat number for row " + rowNumber +
@@ -136,11 +136,7 @@ public class PlaneManagement {
 
                 Ticket ticket = new Ticket(rowNumber, seatNumber, price, person);
 
-                // Resize the soldTickets array to accommodate the new ticket
-                Ticket[] newSoldTickets = new Ticket[soldTickets.length + 1];
-                System.arraycopy(soldTickets, 0, newSoldTickets, 0, soldTickets.length);
-                newSoldTickets[soldTickets.length] = ticket;
-                soldTickets = newSoldTickets;
+                soldTickets[rowIndex][seatIndex] = ticket;
                 ticket.save();
 
                 // Exit the loop if the seat is successfully booked
@@ -152,7 +148,18 @@ public class PlaneManagement {
     private boolean isValidRow(String rowNumber) {
         return rowNumber.equalsIgnoreCase("A") || rowNumber.equalsIgnoreCase("B") || rowNumber.equalsIgnoreCase("C") || rowNumber.equalsIgnoreCase("D");
     }
-
+    private int GetSeat(String rowNumber) {
+        int seatNumber= 0;
+        scanner.nextLine();
+        try{
+            seatNumber = scanner.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid seat number for row " + rowNumber +
+                    ". Please select a seat number between 1 and " + (rowNumber.equalsIgnoreCase("A") || rowNumber.equalsIgnoreCase("D") ? 14 : 12));
+            return GetSeat(rowNumber);
+        }
+        return seatNumber;
+    }
     private boolean isValidSeat(String rowNumber, int seatNumber) {
         return (rowNumber.equalsIgnoreCase("A") || rowNumber.equalsIgnoreCase("D")) && seatNumber >= 1 && seatNumber <= 14 ||
                 (rowNumber.equalsIgnoreCase("B") || rowNumber.equalsIgnoreCase("C")) && seatNumber >= 1 && seatNumber <= 12;
@@ -170,7 +177,7 @@ public class PlaneManagement {
             }
 
             System.out.println("Enter Seat Number: ");
-            int seat = scanner.nextInt();
+            int seat = GetSeat(row);
 
             if (!isValidSeat(row, seat)) {
                 System.out.println("Invalid seat number for row " + row +
@@ -185,27 +192,9 @@ public class PlaneManagement {
                 seats[rowIndex][seatIndex] = 0;
                 System.out.println("Seat " + row + seat + " has been canceled.");
 
-                // Find the ticket to cancel
-                Ticket cancelledTicket = null;
-                for (int i = 0; i < soldTickets.length; i++) {
-                    if (soldTickets[i].getRow().equalsIgnoreCase(row) && soldTickets[i].getSeat() == seatIndex) {
-                        cancelledTicket = soldTickets[i];
-                        break;
-                    }
-                }
+                soldTickets[rowIndex][seatIndex].deleteFile();
 
-                // If ticket found, remove it from the soldTickets array and delete the file
-                if (cancelledTicket != null) {
-                    cancelledTicket.deleteFile(); // Delete the associated file
-                    Ticket[] newSoldTickets = new Ticket[soldTickets.length - 1];
-                    int index = 0;
-                    for (int i = 0; i < soldTickets.length; i++) {
-                        if (soldTickets[i] != cancelledTicket) {
-                            newSoldTickets[index++] = soldTickets[i];
-                        }
-                    }
-                    soldTickets = newSoldTickets;
-                }
+                soldTickets[rowIndex][seatIndex] = null;
             } else {
                 System.out.println("Seat " + row + seat + " is already available.");
             }
@@ -213,7 +202,6 @@ public class PlaneManagement {
             break; // Exit the loop if the seat is successfully canceled
         }
     }
-
 
     private static void find_first_available(Scanner scanner) {
         boolean found = false;
@@ -253,15 +241,18 @@ public class PlaneManagement {
     public void print_tickets_info() {
         double totalPrice = 0.0;
         System.out.println("Tickets Information:");
-        for (Ticket ticket : soldTickets) {
-            String row = ticket.getRow();
-            int seat = ticket.getSeat();
-            double price = ticket.getPrice();
-
-            System.out.println("Row: " + row + ", Seat: " + seat + ", Price: " + price);
-            totalPrice += price;
+        for (int i = 0; i < soldTickets.length; i++) {
+            for (int j = 0; j < soldTickets[i].length; j++) {
+                Ticket ticket = soldTickets[i][j];
+                if (ticket != null) {
+                    String row = ticket.getRow();
+                    int seat = ticket.getSeat();
+                    double price = ticket.getPrice();
+                    totalPrice += price;
+                    System.out.println("Row: " + row + ", Seat: " + seat + ", Price: " + price);
+                }
+            }
         }
-
         System.out.println("Total Sales: £" + totalPrice);
     }
 
@@ -269,29 +260,15 @@ public class PlaneManagement {
         System.out.println("Enter row Letter: ");
         String row = scanner.next();
         System.out.println("Enter Seat Number: ");
-        int seat = scanner.nextInt();
+        int seat = GetSeat(row);
 
-        Ticket ticket = findTicket(row, seat);
-        if (ticket != null) {
-            System.out.println("Ticket found:");
-            System.out.println("Row: " + ticket.getRow() + ", Seat: " + ticket.getSeat());
-            System.out.println("Price: " + ticket.getPrice());
-            System.out.println("Person Information:");
-            System.out.println("Name: " + ticket.getPerson().getName());
-            System.out.println("Surname: " + ticket.getPerson().getSurname());
-            System.out.println("Email: " + ticket.getPerson().getEmail());
-        } else {
+        int rowIndex = Character.toUpperCase(row.charAt(0)) - 'A';
+        int seatindex = seat-1;
+        if (soldTickets[rowIndex][seatindex] == null){
             System.out.println("Ticket not found.");
+        }else{
+            soldTickets[rowIndex][seatindex].printInfo();
         }
-    }
-
-    private Ticket findTicket(String row, int seat) {
-        for (Ticket ticket : soldTickets) {
-            if (ticket.getRow().equalsIgnoreCase(row) && ticket.getSeat() == seat) {
-                return ticket;
-            }
-        }
-        return null;
     }
 
     public static void main(String[] args) {
