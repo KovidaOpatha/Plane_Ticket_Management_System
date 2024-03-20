@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PlaneManagement {
@@ -11,7 +10,7 @@ public class PlaneManagement {
             {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"},
             {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"},
     };
-    private ArrayList<Ticket> soldTickets = new ArrayList<>();
+    private Ticket[] soldTickets = new Ticket[0];
 
     public void printMenu() {
         System.out.println("");
@@ -98,10 +97,13 @@ public class PlaneManagement {
 
                 Person person = new Person(name, surname, email);
                 Ticket ticket = new Ticket(rowNumber, seatNumber, calculatePrice(rowNumber, seatNumber), person);
-                soldTickets.add(ticket);
+
+                // Resize the soldTickets array to accommodate the new ticket
+                Ticket[] newSoldTickets = new Ticket[soldTickets.length + 1];
+                System.arraycopy(soldTickets, 0, newSoldTickets, 0, soldTickets.length);
+                newSoldTickets[soldTickets.length] = ticket;
+                soldTickets = newSoldTickets;
             }
-        }else {
-            System.out.println("Invalid row or seat number.");
         }
     }
 
@@ -120,20 +122,37 @@ public class PlaneManagement {
 
     private void cancel_seat(Scanner scanner) {
         System.out.println("Enter row Letter: ");
-        String row = scanner.next().toUpperCase(); // Convert input to uppercase
+        String row = scanner.next().toUpperCase(); // Convert row input to uppercase
         System.out.println("Enter Seat Number: ");
         int seat = scanner.nextInt();
 
-        int rowNumber = row.charAt(0) - 'A';  // Convert row letter to index
-        int seatNumber = seat - 1;  // Convert seat number to index
+        int rowIndex = row.charAt(0) - 'A';  // Convert row letter to index
+        int seatIndex = seat - 1;  // Convert seat number to index
 
-        if (rowNumber >= 0 && rowNumber < seats.length && seatNumber >= 0 && seatNumber < seats[rowNumber].length) {
-            if (seats[rowNumber][seatNumber].equals("X")) {
-                seats[rowNumber][seatNumber] = "0";
+        if (rowIndex >= 0 && rowIndex < seats.length && seatIndex >= 0 && seatIndex < seats[rowIndex].length) {
+            if (seats[rowIndex][seatIndex].equals("X")) {
+                seats[rowIndex][seatIndex] = "0";
                 System.out.println("Seat " + row + seat + " has been canceled.");
-                Ticket cancelledTicket = findTicket(row, seat);
+
+                // Find the ticket to cancel
+                Ticket cancelledTicket = null;
+                for (int i = 0; i < soldTickets.length; i++) {
+                    if (soldTickets[i].getRow().equalsIgnoreCase(row) && soldTickets[i].getSeat() == seatIndex) {
+                        cancelledTicket = soldTickets[i];
+                        break;
+                    }
+                }
+
+                // If ticket found, remove it from the soldTickets array
                 if (cancelledTicket != null) {
-                    soldTickets.remove(cancelledTicket);
+                    Ticket[] newSoldTickets = new Ticket[soldTickets.length - 1];
+                    int index = 0;
+                    for (int i = 0; i < soldTickets.length; i++) {
+                        if (soldTickets[i] != cancelledTicket) {
+                            newSoldTickets[index++] = soldTickets[i];
+                        }
+                    }
+                    soldTickets = newSoldTickets;
                 }
             } else {
                 System.out.println("Seat " + row + seat + " is already available.");
