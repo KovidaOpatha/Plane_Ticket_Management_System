@@ -74,22 +74,29 @@ public class PlaneManagement {
     }
 
     private double calculatePrice(String row, int seat) {
-        int rowIndex = row.charAt(0) - 'A';
+        char rowChar = Character.toUpperCase(row.charAt(0));
+        int rowIndex = rowChar - 'A';
         int seatIndex = seat - 1;
+
+        System.out.println("Row Index: " + rowIndex);
+        System.out.println("Seat Index: " + seatIndex);
+
+        double price = 0.0;
 
         if (rowIndex >= 0 && rowIndex < seats.length && seatIndex >= 0 && seatIndex < seats[rowIndex].length) {
             if ((rowIndex == 1 || rowIndex == 2) && seatIndex >= 9) {
-                return 180.0;
+                price = 180.0;
             } else if (seatIndex < 5) {
-                return 200.0;
+                price = 200.0;
             } else if (seatIndex >= 5 && seatIndex < 9) {
-                return 150.0;
+                price = 150.0;
             } else {
-                return 180.0;
+                price = 180.0;
             }
         }
 
-        return 0.0; // Return 0 if seat is out of bounds
+        System.out.println("Price: " + price);
+        return price;
     }
 
     private void buy_seat(Scanner scanner) {
@@ -102,7 +109,7 @@ public class PlaneManagement {
             int rowIndex = Character.toUpperCase(rowNumber.charAt(0)) - 'A';
             int seatIndex = seatNumber - 1;
 
-            if (seats[rowIndex][seatIndex] == "X") {
+            if (seats[rowIndex][seatIndex].equals("X")) {
                 System.out.println("Seat already taken. Please select another seat.");
             } else {
                 seats[rowIndex][seatIndex] = "X";
@@ -115,8 +122,14 @@ public class PlaneManagement {
                 System.out.println("Seat booked successfully.");
 
                 Person person = new Person(name, surname, email);
-                double price = calculatePrice(rowNumber, seatNumber); // Calculate price
-                Ticket ticket = new Ticket(rowNumber, seatNumber, calculatePrice(rowNumber, seatNumber), person);
+
+                // Calculate the price using the calculatePrice method
+                double price = calculatePrice(rowNumber, seatNumber);
+
+                // Print the calculated price for debugging
+                System.out.println("Calculated price: £" + price);
+
+                Ticket ticket = new Ticket(rowNumber, seatNumber, price, person);
 
                 // Resize the soldTickets array to accommodate the new ticket
                 Ticket[] newSoldTickets = new Ticket[soldTickets.length + 1];
@@ -124,7 +137,7 @@ public class PlaneManagement {
                 newSoldTickets[soldTickets.length] = ticket;
                 soldTickets = newSoldTickets;
 
-                System.out.println("Ticket price: £" + price);
+                System.out.println("Ticket price: £" + ticket.getPrice()); // Use getPrice() method to print the price
             }
         }
     }
