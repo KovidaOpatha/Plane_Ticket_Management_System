@@ -59,7 +59,7 @@ public class PlaneManagement {
                 display_seat(scanner);
                 break;
             case 5:
-                System.out.println("Simulating printing tickets and total sales...");
+                print_tickets_info();
                 break;
             case 6:
                 search_ticket(scanner);
@@ -71,6 +71,25 @@ public class PlaneManagement {
             default:
                 System.out.println("Unexpected choice. Please try again.");
         }
+    }
+
+    private double calculatePrice(String row, int seat) {
+        int rowIndex = row.charAt(0) - 'A';
+        int seatIndex = seat - 1;
+
+        if (rowIndex >= 0 && rowIndex < seats.length && seatIndex >= 0 && seatIndex < seats[rowIndex].length) {
+            if ((rowIndex == 1 || rowIndex == 2) && seatIndex >= 9) {
+                return 180.0;
+            } else if (seatIndex < 5) {
+                return 200.0;
+            } else if (seatIndex >= 5 && seatIndex < 9) {
+                return 150.0;
+            } else {
+                return 180.0;
+            }
+        }
+
+        return 0.0; // Return 0 if seat is out of bounds
     }
 
     private void buy_seat(Scanner scanner) {
@@ -96,6 +115,7 @@ public class PlaneManagement {
                 System.out.println("Seat booked successfully.");
 
                 Person person = new Person(name, surname, email);
+                double price = calculatePrice(rowNumber, seatNumber); // Calculate price
                 Ticket ticket = new Ticket(rowNumber, seatNumber, calculatePrice(rowNumber, seatNumber), person);
 
                 // Resize the soldTickets array to accommodate the new ticket
@@ -103,22 +123,12 @@ public class PlaneManagement {
                 System.arraycopy(soldTickets, 0, newSoldTickets, 0, soldTickets.length);
                 newSoldTickets[soldTickets.length] = ticket;
                 soldTickets = newSoldTickets;
+
+                System.out.println("Ticket price: £" + price);
             }
         }
     }
 
-    private double calculatePrice(String rowNumber, int seatNumber) {
-        return 0;
-    }
-
-    private static void display_seat(Scanner scanner){
-        for (int i = 0; i < seats.length; i++) {
-            System.out.println("");
-            for (int j = 0; j < seats[i].length; j++) {
-                System.out.print(seats[i][j] + " ");
-            }
-        }
-    }
 
     private void cancel_seat(Scanner scanner) {
         System.out.println("Enter row Letter: ");
@@ -183,6 +193,31 @@ public class PlaneManagement {
             System.out.println("No available seats found.");
         }
     }
+
+    private static void display_seat(Scanner scanner){
+        for (int i = 0; i < seats.length; i++) {
+            System.out.println("");
+            for (int j = 0; j < seats[i].length; j++) {
+                System.out.print(seats[i][j] + " ");
+            }
+        }
+    }
+
+    public void print_tickets_info() {
+        double totalPrice = 0.0;
+        System.out.println("Tickets Information:");
+        for (Ticket ticket : soldTickets) {
+            String row = ticket.getRow();
+            int seat = ticket.getSeat();
+            double price = ticket.getPrice();
+
+            System.out.println("Row: " + row + ", Seat: " + seat + ", Price: " + price);
+            totalPrice += price;
+        }
+
+        System.out.println("Total Sales: £" + totalPrice);
+    }
+
     private void search_ticket(Scanner scanner) {
         System.out.println("Enter row Letter: ");
         String row = scanner.next();
