@@ -17,6 +17,7 @@ public class Ticket {
         save(); // Call save method when a ticket is created
     }
 
+    //Saves the ticket information to a file.
     public void save() {
         String fileName = row + seat + ".txt";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
@@ -34,6 +35,7 @@ public class Ticket {
         }
     }
 
+    //Deletes the ticket information file.
     public void deleteFile() {
         String fileName = row + seat + ".txt";
         File file = new File(fileName);
