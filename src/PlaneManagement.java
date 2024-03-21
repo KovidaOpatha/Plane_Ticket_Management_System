@@ -169,8 +169,8 @@ public class PlaneManagement {
                 ticket.save(); //saving ticket informations in a file
 
                 // Exit the loop if the seat is successfully booked
-                break;
             }
+            break;
         }
     }
 
@@ -217,6 +217,12 @@ public class PlaneManagement {
 
             System.out.print("Enter Seat Number: ");
             int seat = GetSeat(row);
+
+            if (!isValidSeat(row, seat)) {
+                System.out.println("Invalid seat number for row " + row +
+                        ". Please select a seat number between 1 and " + (row.equalsIgnoreCase("A") || row.equalsIgnoreCase("D") ? 14 : 12));
+                continue; // Repeat the loop to ask for seat number again
+            }
 
             int rowIndex = row.charAt(0) - 'A';  // Convert row letter to index
             int seatIndex = seat - 1;  // Convert seat number to index
@@ -301,17 +307,38 @@ public class PlaneManagement {
 
     //Give user a search option for get the details of the ticket
     private void search_ticket(Scanner scanner) {
-        System.out.println("Enter row Letter: ");
-        String row = scanner.next();
-        System.out.println("Enter Seat Number: ");
-        int seat = GetSeat(row);
+        while (true) {
+            System.out.print("Enter RAW Letter (A,B,C,D): ");
+            String rowNumber = scanner.next().toUpperCase(); // Convert input to uppercase for consistency
 
-        int rowIndex = Character.toUpperCase(row.charAt(0)) - 'A'; //converting row letter to index
-        int seatindex = seat-1;
-        if (soldTickets[rowIndex][seatindex] == null){
-            System.out.println("Ticket not found.");
-        }else{
-            soldTickets[rowIndex][seatindex].printInfo();
+            //checking inputs are correct
+            if (!isValidRow(rowNumber)) {
+                System.out.println("Invalid row number. Please select between (A,B,C,D).");
+                continue; // Repeat the loop to ask for row number again
+            }
+
+            System.out.print("Enter a SEAT Number: ");
+            int seatNumber = GetSeat(rowNumber);
+
+            //validating  seat number
+            if (!isValidSeat(rowNumber, seatNumber)) {
+                System.out.println("Invalid seat number for row " + rowNumber +
+                        ". Please select a seat number between 1 and " + (rowNumber.equalsIgnoreCase("A") || rowNumber.equalsIgnoreCase("D") ? 14 : 12));
+                continue; // Repeat the loop to ask for seat number again
+            }
+
+            //calculate the array indices for the seats
+            int rowIndex = Character.toUpperCase(rowNumber.charAt(0)) - 'A';
+            int seatIndex = seatNumber - 1;
+
+            if (soldTickets[rowIndex][seatIndex] == null){
+                System.out.println("Ticket not found.");
+            }else{
+                soldTickets[rowIndex][seatIndex].printInfo();
+            }
+
+                // Exit the loop if the seat is successfully booked
+                break;
         }
     }
 

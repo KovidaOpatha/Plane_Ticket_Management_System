@@ -21,13 +21,15 @@ public class Ticket {
     public void save() {
         String fileName = row + seat + ".txt";
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            writer.println("Row: " + row);
-            writer.println("Seat: " + seat);
+            writer.println("Ticket Information");
+            writer.println("Row  : " + row);
+            writer.println("Seat : " + seat);
             writer.println("Price: " + price);
+            writer.println("");
             writer.println("Person Information:");
-            writer.println("Name: " + person.getName());
+            writer.println("Name   : " + person.getName());
             writer.println("Surname: " + person.getSurname());
-            writer.println("Email: " + person.getEmail());
+            writer.println("Email  : " + person.getEmail());
             //System.out.println("Ticket information saved to " + fileName); //This line is here to debug save method
         } catch (IOException e) {
             //System.out.println("Failed to save ticket information."); //This line is here to debug save method
@@ -81,8 +83,9 @@ public class Ticket {
         this.person = person;
     }
     public void printInfo() {
-        System.out.println("Row: " + row);
-        System.out.println("Seat: " + seat);
+        System.out.println("Ticket Information");
+        System.out.println("Row  : " + row);
+        System.out.println("Seat : " + seat);
         System.out.println("Price: " + price);
         System.out.println("Person Information:");
         person.printInfo();
