@@ -27,9 +27,9 @@ public class Ticket {
             writer.println("Name: " + person.getName());
             writer.println("Surname: " + person.getSurname());
             writer.println("Email: " + person.getEmail());
-            System.out.println("Ticket information saved to " + fileName);
+            //System.out.println("Ticket information saved to " + fileName); //This line is here to debug save method
         } catch (IOException e) {
-            System.out.println("Failed to save ticket information.");
+            //System.out.println("Failed to save ticket information."); //This line is here to debug save method
             e.printStackTrace();
         }
     }
@@ -39,7 +39,7 @@ public class Ticket {
         File file = new File(fileName);
         if (file.exists()) {
             file.delete();
-            System.out.println("Ticket information deleted from " + fileName);
+//            System.out.println("Ticket information deleted from " + fileName); //This line is here to debug delete file method
         } else {
             System.out.println("Ticket file not found.");
         }

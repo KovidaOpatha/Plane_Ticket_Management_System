@@ -28,7 +28,7 @@ public class PlaneManagement {
         System.out.println("    6) Search ticket");
         System.out.println("    0) Quit");
         System.out.println("************************************************");
-        System.out.print("Please select an option: ");
+        System.out.print("Please Select an Option(0-6): ");
     }
 
     public int getChoice() {
@@ -97,15 +97,15 @@ public class PlaneManagement {
 
     private void buy_seat(Scanner scanner) {
         while (true) {
-            System.out.println("Enter ROW Letter (A,B,C,D): ");
+            System.out.print("Enter RAW Letter (A,B,C,D): ");
             String rowNumber = scanner.next().toUpperCase(); // Convert input to uppercase for consistency
 
             if (!isValidRow(rowNumber)) {
-                System.out.println("Invalid row number. Please enter A, B, C, or D.");
+                System.out.println("Invalid row number. Please select between (A,B,C,D).");
                 continue; // Repeat the loop to ask for row number again
             }
 
-            System.out.println("Enter SEAT Number: ");
+            System.out.print("Enter a SEAT Number: ");
             int seatNumber = GetSeat(rowNumber);
 
             if (!isValidSeat(rowNumber, seatNumber)) {
@@ -118,16 +118,23 @@ public class PlaneManagement {
             int seatIndex = seatNumber - 1;
 
             if (seats[rowIndex][seatIndex] != 0) {
-                System.out.println("Seat Already Taken. Please select another Seat.");
+                System.out.println("Sorry!! Seat is Already Taken. Please select another Seat.");
             } else {
                 seats[rowIndex][seatIndex] = 1;
-                System.out.println("Enter your First Name:");
+                System.out.print("Enter your First Name:");
                 String name = scanner.next();
-                System.out.println("Enter your Sure Name:");
+                System.out.print("Enter your Sure Name:");
                 String surname = scanner.next();
-                System.out.println("Enter your email:");
+                System.out.print("Enter your email:");
                 String email = scanner.next();
-                System.out.println("Seat Booked Successfully.");
+                System.out.println("------------------------------");
+                System.out.println("       Booking Details"        );
+                System.out.println("------------------------------");
+                System.out.println("Name: "+name+" "+surname);
+                System.out.println("Email: "+email);
+                System.out.println("Seat: Row "+rowNumber+" Seat "+seatNumber);
+                System.out.println("------------------------------");
+                System.out.println("Seat "+rowNumber+seatNumber+ " Booked Successfully.");
 
                 Person person = new Person(name, surname, email);
 
@@ -156,6 +163,7 @@ public class PlaneManagement {
         } catch (Exception e) {
             System.out.println("Invalid seat number for row " + rowNumber +
                     ". Please select a seat number between 1 and " + (rowNumber.equalsIgnoreCase("A") || rowNumber.equalsIgnoreCase("D") ? 14 : 12));
+            System.out.print("Enter Seat Number: ");
             return GetSeat(rowNumber);
         }
         return seatNumber;
@@ -168,22 +176,16 @@ public class PlaneManagement {
 
     private void cancel_seat(Scanner scanner) {
         while (true) {
-            System.out.println("Enter row Letter: ");
+            System.out.print("Enter row Letter (A,B,C,D): ");
             String row = scanner.next().toUpperCase(); // Convert row input to uppercase
 
             if (!isValidRow(row)) {
-                System.out.println("Invalid row number. Please enter A, B, C, or D.");
+                System.out.println("Invalid row number. Please enter between A,B,C,D.");
                 continue; // Repeat the loop to ask for row number again
             }
 
-            System.out.println("Enter Seat Number: ");
+            System.out.print("Enter Seat Number: ");
             int seat = GetSeat(row);
-
-            if (!isValidSeat(row, seat)) {
-                System.out.println("Invalid seat number for row " + row +
-                        ". Please select a seat number between 1 and " + (row.equalsIgnoreCase("A") || row.equalsIgnoreCase("D") ? 14 : 12));
-                continue; // Repeat the loop to ask for seat number again
-            }
 
             int rowIndex = row.charAt(0) - 'A';  // Convert row letter to index
             int seatIndex = seat - 1;  // Convert seat number to index
