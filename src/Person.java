@@ -3,6 +3,7 @@ public class Person {
     private String surname;
     private String email;
 
+    //Constructs a new Person object with the specified name, surname, and email.
     public Person(String name, String surname, String email) {
         this.name = name;
         this.surname = surname;

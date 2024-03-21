@@ -47,6 +47,8 @@ public class Ticket {
         }
     }
 
+    // Getter and setter methods for row, seat, price, and person
+
     public String getRow() {
         return row;
     }
