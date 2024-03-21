@@ -222,6 +222,7 @@ public class PlaneManagement {
             }
         }
 
+
         if (!found) {
             System.out.println("No available seats found.");
         }
