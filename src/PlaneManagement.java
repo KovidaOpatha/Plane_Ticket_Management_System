@@ -108,7 +108,7 @@ public class PlaneManagement {
     private void buy_seat(Scanner scanner) {
         // Loop until a seat is successfully booked
         while (true) {
-            System.out.print("Enter RAW Letter (A,B,C,D): ");
+            System.out.print("Enter ROW Letter (A,B,C,D): ");
             String rowNumber = scanner.next().toUpperCase(); // Convert input to uppercase for consistency
 
             //checking inputs are correct
@@ -308,7 +308,7 @@ public class PlaneManagement {
     //Give user a search option for get the details of the ticket
     private void search_ticket(Scanner scanner) {
         while (true) {
-            System.out.print("Enter RAW Letter (A,B,C,D): ");
+            System.out.print("Enter ROW Letter (A,B,C,D): ");
             String rowNumber = scanner.next().toUpperCase(); // Convert input to uppercase for consistency
 
             //checking inputs are correct
